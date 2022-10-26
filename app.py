@@ -22,11 +22,14 @@ def hello():
 
 @app.route('/random', methods=['POST'])
 def randomise():
-    original_url = request.form["url"]
+    original_url = request.get_json(force=True)
+    print(f'{original_url["url"]}---------------------------------------------------------------------------------------------------------------')
     shortened_url = r.random_string()
-    urls = (original_url, shortened_url)
+    urls = [original_url['url'], shortened_url]
     r.insert_urls(urls)
-    return jsonify(shortened_url)
+    # return jsonify("https://url--reducer.herokuapp.com/" + shortened_url)
+    print("http://localhost:5000/" + shortened_url)
+    return jsonify("http://localhost:5000/" + shortened_url)
 
 @app.route('/<str>')
 def reroute(str):
@@ -35,6 +38,7 @@ def reroute(str):
     conn = db_connection()
     cursor = conn.execute('SELECT original FROM url WHERE shortened = (?)', str_t)
     url = cursor.fetchone()[0]
+    print(url)
     if url == None:
         print('redirecting to home')
         return redirect('/')

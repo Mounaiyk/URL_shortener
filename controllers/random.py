@@ -17,7 +17,6 @@ def random_string():
     str1 = "".join(random.choice(letters) for i in range(10))
     str2 = []
     str2.append(str1)
-    print(f'{str1}-----------------------------------------------------------------------------------------------------------------------------')
     conn = db_connection()
     cursor = conn.execute('SELECT * FROM url WHERE shortened = (?)', str2)
     # cursor = conn.execute(f'SELECT * FROM url WHERE id = {id};')
