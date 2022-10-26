@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect
 from flask_cors import CORS
+from werkzeug import exceptions
 import sqlite3
 
 from controllers import random as r
@@ -7,16 +8,48 @@ from controllers import random as r
 app = Flask(__name__)
 CORS(app)
 
+def db_connection():
+    conn = None
+    try:
+        conn = sqlite3.connect('url.sqlite')
+    except sqlite3.error as e:
+        print(e)
+    return conn
+
 @app.route('/')
 def hello():
     return render_template("input.html")
 
 @app.route('/random', methods=['POST'])
 def randomise():
-    print(request.form)
-    # return r.search(request.form["url"])
-    # original_url = request.form["url"]
-    # shortened_url = r.random_string()
-    # r.insert_urls(original_url, shortened_url)
-    # return jsonify(shortened_url)
-    return r.random_string(request.form["url"])
+    original_url = request.form["url"]
+    shortened_url = r.random_string()
+    urls = (original_url, shortened_url)
+    r.insert_urls(urls)
+    return jsonify(shortened_url)
+
+@app.route('/<str>')
+def reroute(str):
+    str_t = []
+    str_t.append(str)
+    conn = db_connection()
+    cursor = conn.execute('SELECT original FROM url WHERE shortened = (?)', str_t)
+    print(cursor.fetchone())
+    if cursor.fetchone() == "":
+        print('redirecting to home')
+        return redirect('/')
+    else:
+        print('redirecting to original')
+        return redirect(cursor.fetchone())
+    
+
+@app.errorhandler(exceptions.NotFound)
+def handle_404(err):
+    path = environ.get("PATH_INFO")
+    print(path)
+    return err
+
+
+
+
+
