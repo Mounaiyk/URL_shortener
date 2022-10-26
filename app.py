@@ -10,7 +10,7 @@ from controllers import random as r
 if __name__ == '__main__':
   app = create_app()
 
-  web_app.run(debug=False, port=get_port(), host='0.0.0.0')
+  app.run(debug=False, port=get_port(), host='0.0.0.0')
 
 def db_connection():
     conn = None
@@ -64,7 +64,7 @@ def create_app():
 
     logging.info('Starting up..')
 
-    return web_app
+    return app
 
   except Exception as e:
     logging.exception(e)
