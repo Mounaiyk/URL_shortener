@@ -5,12 +5,8 @@ import sqlite3
 
 from controllers import random as r
 
-
-
-if __name__ == '__main__':
-  app = create_app()
-
-  app.run(debug=False, port=get_port(), host='0.0.0.0')
+app = Flask(__name__)
+CORS(app)
 
 def db_connection():
     conn = None
@@ -55,25 +51,6 @@ def handle_404(err):
     print(path)
     return err
 
-# define Flask app
-def create_app():
-  try:
-
-    app = Flask(__name__)
-    CORS(app)
-
-    logging.info('Starting up..')
-
-    return app
-
-  except Exception as e:
-    logging.exception(e)
-
-# retrieve port
-def get_port():
-  return int(os.environ.get("PORT", 5000))
-
-# start Flask app
 
 
 
