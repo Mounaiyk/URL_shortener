@@ -5,8 +5,12 @@ import sqlite3
 
 from controllers import random as r
 
-app = Flask(__name__)
-CORS(app)
+
+
+if __name__ == '__main__':
+  web_app = create_app()
+
+  web_app.run(debug=False, port=get_port(), host='0.0.0.0')
 
 def db_connection():
     conn = None
@@ -56,6 +60,7 @@ def create_app():
   try:
 
     web_app = Flask(__name__)
+    CORS(web_app)
 
     logging.info('Starting up..')
 
@@ -69,10 +74,6 @@ def get_port():
   return int(os.environ.get("PORT", 5000))
 
 # start Flask app
-if __name__ == '__main__':
-  web_app = create_app()
-
-  web_app.run(debug=False, port=get_port(), host='0.0.0.0')
 
 
 
