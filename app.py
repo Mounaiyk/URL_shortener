@@ -8,7 +8,7 @@ from controllers import random as r
 
 
 if __name__ == '__main__':
-  web_app = create_app()
+  app = create_app()
 
   web_app.run(debug=False, port=get_port(), host='0.0.0.0')
 
@@ -59,8 +59,8 @@ def handle_404(err):
 def create_app():
   try:
 
-    web_app = Flask(__name__)
-    CORS(web_app)
+    app = Flask(__name__)
+    CORS(app)
 
     logging.info('Starting up..')
 
